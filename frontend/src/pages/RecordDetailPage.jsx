@@ -63,6 +63,7 @@ export default function RecordDetailPage() {
   if (isLoading) return <div className="p-10 text-sm text-muted-foreground">Loading record...</div>
   if (!record) return <div className="p-10 text-sm text-red-600">Record not found</div>
 
+  const SCOPE_LABEL = { 1: 'SAP / Fuel & Procurement', 2: 'Utility / Electricity', 3: 'Corporate Travel' }
   const sc = SCOPE_COLOR[record.scope] || 'text-gray-700'
 
   return (
@@ -77,7 +78,7 @@ export default function RecordDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className={`text-xs font-medium uppercase tracking-wide ${sc}`}>Scope {record.scope}</span>
+            <span className={`text-xs font-medium uppercase tracking-wide ${sc}`}>{SCOPE_LABEL[record.scope] || `Scope ${record.scope}`}</span>
           </div>
           <h1 className="text-2xl font-semibold text-gray-900 capitalize">
             {record.category} — {record.subcategory?.replace(/_/g, ' ')}

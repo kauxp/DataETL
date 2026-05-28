@@ -13,6 +13,7 @@ import {
 } from '../components/ui/dialog'
 
 const SCOPE_COLOR = { 1: 'bg-amber-400', 2: 'bg-purple-400', 3: 'bg-blue-400' }
+const SCOPE_LABEL = { 1: 'SAP / Fuel', 2: 'Utility', 3: 'Travel' }
 
 export default function ReviewPage() {
   const qc = useQueryClient()
@@ -82,10 +83,10 @@ export default function ReviewPage() {
           <option value="rejected">Rejected</option>
         </Select>
         <Select value={filters.scope} onChange={e => setFilters(f => ({ ...f, scope: e.target.value, page: 1 }))} className="w-36">
-          <option value="">All scopes</option>
-          <option value="1">Scope 1</option>
-          <option value="2">Scope 2</option>
-          <option value="3">Scope 3</option>
+          <option value="">All source types</option>
+          <option value="1">SAP / Fuel & Procurement</option>
+          <option value="2">Utility / Electricity</option>
+          <option value="3">Corporate Travel</option>
         </Select>
         <Select value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value, page: 1 }))} className="w-40">
           <option value="">All categories</option>
@@ -120,7 +121,7 @@ export default function ReviewPage() {
                     className="accent-emerald-600 cursor-pointer"
                   />
                 </th>
-                {['Period', 'Scope', 'Facility', 'Category', 'Quantity', 'CO₂e (t)', 'Status', 'Flags', 'Actions'].map((h) => (
+                {['Period', 'Source Type', 'Facility', 'Category', 'Quantity', 'CO₂e (t)', 'Status', 'Flags', 'Actions'].map((h) => (
                   <th key={h} className={`px-3 py-2.5 text-xs font-medium text-muted-foreground uppercase tracking-wide ${['Quantity', 'CO₂e (t)'].includes(h) ? 'text-right' : 'text-left'}`}>{h}</th>
                 ))}
               </tr>
@@ -151,7 +152,7 @@ export default function ReviewPage() {
                   <td className="px-3 py-3">
                     <div className="flex items-center gap-1.5">
                       <span className={`w-2 h-2 rounded-full flex-shrink-0 ${SCOPE_COLOR[r.scope] || 'bg-gray-300'}`} />
-                      <span className="text-xs text-gray-700">S{r.scope}</span>
+                      <span className="text-xs text-gray-700">{SCOPE_LABEL[r.scope] || `S${r.scope}`}</span>
                     </div>
                   </td>
                   <td className="px-3 py-3">

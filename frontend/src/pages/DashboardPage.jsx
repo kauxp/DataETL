@@ -86,9 +86,9 @@ export default function DashboardPage() {
 
       {/* Scope cards */}
       <div className="grid grid-cols-4 gap-3">
-        <StatCard label="Scope 1" value={`${fmt(d.scope1_co2e || 0)} t`} sub="Direct — fuel combustion" color="amber" icon={Flame} />
-        <StatCard label="Scope 2" value={`${fmt(d.scope2_co2e || 0)} t`} sub="Purchased electricity" color="purple" icon={Zap} />
-        <StatCard label="Scope 3" value={`${fmt(d.scope3_co2e || 0)} t`} sub="Business travel & more" color="blue" icon={Plane} />
+        <StatCard label="SAP & Procurement" value={`${fmt(d.scope1_co2e || 0)} t`} sub="Fuel combustion data" color="amber" icon={Flame} />
+        <StatCard label="Utility / Electricity" value={`${fmt(d.scope2_co2e || 0)} t`} sub="Electricity & utility data" color="purple" icon={Zap} />
+        <StatCard label="Corporate Travel" value={`${fmt(d.scope3_co2e || 0)} t`} sub="Flights, hotels, ground transport" color="blue" icon={Plane} />
         <StatCard label="Total CO₂e" value={`${fmt(total)} t`} sub="All scopes combined" color="teal" icon={TrendingUp} />
       </div>
 
@@ -105,7 +105,7 @@ export default function DashboardPage() {
         {/* Bar chart */}
         <div className="rounded-lg border bg-white p-5 shadow-sm">
           <div className="mb-4">
-            <h3 className="text-sm font-medium text-gray-900">Monthly emissions by scope</h3>
+            <h3 className="text-sm font-medium text-gray-900">Monthly emissions by source type</h3>
             <p className="text-xs text-muted-foreground mt-0.5">tCO₂e by reporting period</p>
           </div>
           {chartData.length > 0 ? (
@@ -115,13 +115,13 @@ export default function DashboardPage() {
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={40} />
                   <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.03)' }} />
-                  <Bar dataKey="s1" name="Scope 1" fill="#f59e0b" radius={[2,2,0,0]} />
-                  <Bar dataKey="s2" name="Scope 2" fill="#8b5cf6" radius={[2,2,0,0]} />
-                  <Bar dataKey="s3" name="Scope 3" fill="#3b82f6" radius={[2,2,0,0]} />
+                  <Bar dataKey="s1" name="SAP / Fuel" fill="#f59e0b" radius={[2,2,0,0]} />
+                  <Bar dataKey="s2" name="Utility" fill="#8b5cf6" radius={[2,2,0,0]} />
+                  <Bar dataKey="s3" name="Travel" fill="#3b82f6" radius={[2,2,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
               <div className="flex gap-4 mt-3 pt-3 border-t border-border">
-                {[['Scope 1', '#f59e0b'], ['Scope 2', '#8b5cf6'], ['Scope 3', '#3b82f6']].map(([label, color]) => (
+                {[['SAP / Fuel', '#f59e0b'], ['Utility', '#8b5cf6'], ['Travel', '#3b82f6']].map(([label, color]) => (
                   <div key={label} className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-sm inline-block" style={{ background: color }} />
                     <span className="text-xs text-gray-600">{label}</span>
