@@ -5,34 +5,14 @@ import api from '../lib/api'
 import Badge from '../components/Badge'
 import toast from 'react-hot-toast'
 import { CheckCircle, XCircle, Flag, ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react'
+import { Button } from '../components/ui/button'
+import { Select } from '../components/ui/select'
+import { Textarea } from '../components/ui/textarea'
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose
+} from '../components/ui/dialog'
 
-const SCOPE_DOT = { 1: 'var(--amber)', 2: 'var(--purple)', 3: 'var(--blue)' }
-
-function Th({ children, right }) {
-  return (
-    <th style={{
-      padding: '0 14px 10px 0', textAlign: right ? 'right' : 'left',
-      fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600,
-      color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em',
-      borderBottom: '1px solid var(--border)', whiteSpace: 'nowrap',
-    }}>{children}</th>
-  )
-}
-
-function FilterSelect({ value, onChange, children }) {
-  return (
-    <select
-      value={value}
-      onChange={onChange}
-      style={{
-        background: 'var(--bg-input)', border: '1px solid var(--border)',
-        borderRadius: 5, padding: '6px 10px', color: 'var(--text)',
-        fontFamily: 'var(--font-body)', fontSize: 12,
-        outline: 'none', cursor: 'pointer',
-      }}
-    >{children}</select>
-  )
-}
+const SCOPE_COLOR = { 1: 'bg-amber-400', 2: 'bg-purple-400', 3: 'bg-blue-400' }
 
 export default function ReviewPage() {
   const qc = useQueryClient()
@@ -75,114 +55,74 @@ export default function ReviewPage() {
   const totalPages = Math.ceil(total / 50)
   const allSelected = records.length > 0 && records.every(r => selected.has(r.id))
 
-  const ACTION_COLOR = { approve: 'var(--teal)', reject: 'var(--coral)', flag: 'var(--amber)' }
-
   return (
-    <div style={{ padding: '32px 36px', animation: 'fadeSlideIn 0.3s ease both' }}>
+    <div className="p-6 space-y-4">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+      <div className="flex items-end justify-between">
         <div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--teal)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
-            — Audit workflow
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-head)', fontWeight: 800, fontSize: 28, color: 'var(--text-hi)', margin: 0, letterSpacing: '-0.02em' }}>
-            Review Queue
-          </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text)', margin: '5px 0 0' }}>
-            {total.toLocaleString()} records · page {filters.page} of {totalPages || 1}
-          </p>
+          <h1 className="text-2xl font-semibold text-gray-900">Review Queue</h1>
+          <p className="text-sm text-muted-foreground mt-1">{total.toLocaleString()} records · page {filters.page} of {totalPages || 1}</p>
         </div>
         {selected.size > 0 && (
-          <button
-            onClick={() => bulkMut.mutate(selected)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              background: 'var(--teal)', color: '#000',
-              border: 'none', borderRadius: 6, padding: '9px 18px',
-              fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', letterSpacing: '0.02em',
-            }}
-          >
-            <CheckCircle size={14} strokeWidth={2} />
+          <Button onClick={() => bulkMut.mutate(selected)} size="sm">
+            <CheckCircle size={14} className="mr-1.5" />
             Approve {selected.size} selected
-          </button>
+          </Button>
         )}
       </div>
 
       {/* Filters */}
-      <div style={{
-        background: 'var(--bg-card)', border: '1px solid var(--border)',
-        borderRadius: 8, padding: '14px 18px', marginBottom: 12,
-        display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-      }}>
-        <SlidersHorizontal size={13} color="var(--text-dim)" strokeWidth={1.75} />
-        <FilterSelect value={filters.review_status} onChange={e => setFilters(f => ({ ...f, review_status: e.target.value, page: 1 }))}>
+      <div className="flex items-center gap-3 flex-wrap rounded-lg border bg-white px-4 py-3 shadow-sm">
+        <SlidersHorizontal size={14} className="text-muted-foreground" />
+        <Select value={filters.review_status} onChange={e => setFilters(f => ({ ...f, review_status: e.target.value, page: 1 }))} className="w-36">
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="flagged">Flagged</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
-        </FilterSelect>
-        <FilterSelect value={filters.scope} onChange={e => setFilters(f => ({ ...f, scope: e.target.value, page: 1 }))}>
+        </Select>
+        <Select value={filters.scope} onChange={e => setFilters(f => ({ ...f, scope: e.target.value, page: 1 }))} className="w-36">
           <option value="">All scopes</option>
-          <option value="1">Scope 1 — Direct</option>
-          <option value="2">Scope 2 — Electricity</option>
-          <option value="3">Scope 3 — Travel</option>
-        </FilterSelect>
-        <FilterSelect value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value, page: 1 }))}>
+          <option value="1">Scope 1</option>
+          <option value="2">Scope 2</option>
+          <option value="3">Scope 3</option>
+        </Select>
+        <Select value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value, page: 1 }))} className="w-40">
           <option value="">All categories</option>
           <option value="fuel">Fuel</option>
           <option value="electricity">Electricity</option>
           <option value="flight">Flight</option>
           <option value="hotel">Hotel</option>
           <option value="ground_transport">Ground Transport</option>
-        </FilterSelect>
-        <button
-          onClick={() => setFilters({ review_status: 'flagged', scope: '', category: '', page: 1 })}
-          style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--coral)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 2px' }}
-        >
+        </Select>
+        <button onClick={() => setFilters({ review_status: 'flagged', scope: '', category: '', page: 1 })} className="text-xs text-red-600 hover:text-red-700">
           Flagged only
         </button>
-        <button
-          onClick={() => setFilters({ review_status: '', scope: '', category: '', page: 1 })}
-          style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--text-dim)', background: 'none', border: 'none', cursor: 'pointer', marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}
-        >
+        <button onClick={() => setFilters({ review_status: '', scope: '', category: '', page: 1 })} className="ml-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-gray-700">
           <X size={12} /> Clear
         </button>
       </div>
 
       {/* Table */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+      <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
         {isLoading ? (
-          <div style={{ padding: 40, textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-dim)' }}>
-            Loading records...
-          </div>
+          <div className="p-10 text-center text-sm text-muted-foreground">Loading records...</div>
         ) : records.length === 0 ? (
-          <div style={{ padding: 40, textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-dim)' }}>
-            No records match the current filters
-          </div>
+          <div className="p-10 text-center text-sm text-muted-foreground">No records match the current filters</div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table className="w-full text-sm">
             <thead>
-              <tr>
-                <th style={{ padding: '0 14px 10px', borderBottom: '1px solid var(--border)', width: 32 }}>
+              <tr className="border-b border-border bg-gray-50">
+                <th className="px-4 py-2.5 w-10">
                   <input
-                    type="checkbox" checked={allSelected} onChange={() => {
-                      if (allSelected) setSelected(new Set())
-                      else setSelected(new Set(records.map(r => r.id)))
-                    }}
-                    style={{ accentColor: 'var(--teal)', cursor: 'pointer' }}
+                    type="checkbox" checked={allSelected}
+                    onChange={() => allSelected ? setSelected(new Set()) : setSelected(new Set(records.map(r => r.id)))}
+                    className="accent-emerald-600 cursor-pointer"
                   />
                 </th>
-                <Th>Period</Th>
-                <Th>Scope</Th>
-                <Th>Facility</Th>
-                <Th>Category</Th>
-                <Th right>Quantity</Th>
-                <Th right>CO₂e (t)</Th>
-                <Th>Status</Th>
-                <Th>Flags</Th>
-                <Th>Actions</Th>
+                {['Period', 'Scope', 'Facility', 'Category', 'Quantity', 'CO₂e (t)', 'Status', 'Flags', 'Actions'].map((h) => (
+                  <th key={h} className={`px-3 py-2.5 text-xs font-medium text-muted-foreground uppercase tracking-wide ${['Quantity', 'CO₂e (t)'].includes(h) ? 'text-right' : 'text-left'}`}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -190,11 +130,9 @@ export default function ReviewPage() {
                 <tr
                   key={r.id}
                   onClick={() => navigate(`/records/${r.id}`)}
-                  style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.1s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-raised)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  className="border-b border-border last:border-0 cursor-pointer hover:bg-gray-50 transition-colors"
                 >
-                  <td style={{ padding: '11px 14px' }} onClick={e => e.stopPropagation()}>
+                  <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selected.has(r.id)}
@@ -203,75 +141,62 @@ export default function ReviewPage() {
                         e.target.checked ? s.add(r.id) : s.delete(r.id)
                         setSelected(s)
                       }}
-                      style={{ accentColor: 'var(--teal)', cursor: 'pointer' }}
+                      className="accent-emerald-600 cursor-pointer"
                     />
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0' }}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-hi)' }}>{r.period_start}</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', marginTop: 2 }}>→ {r.period_end}</div>
+                  <td className="px-3 py-3">
+                    <div className="text-xs font-medium text-gray-900">{r.period_start}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">→ {r.period_end}</div>
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: SCOPE_DOT[r.scope], flexShrink: 0, display: 'inline-block' }} />
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text)' }}>S{r.scope}</span>
+                  <td className="px-3 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${SCOPE_COLOR[r.scope] || 'bg-gray-300'}`} />
+                      <span className="text-xs text-gray-700">S{r.scope}</span>
                     </div>
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0' }}>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--text-hi)', fontWeight: 500 }}>{r.facility_name || r.facility_code || '—'}</div>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'var(--text-dim)', marginTop: 2 }}>{r.source_name}</div>
+                  <td className="px-3 py-3">
+                    <div className="text-xs font-medium text-gray-900">{r.facility_name || r.facility_code || '—'}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{r.source_name}</div>
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0' }}>
-                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--text)', textTransform: 'capitalize' }}>{r.category}</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-dim)', marginTop: 2 }}>{r.subcategory}</div>
+                  <td className="px-3 py-3">
+                    <div className="text-xs text-gray-700 capitalize">{r.category}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{r.subcategory}</div>
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0', textAlign: 'right' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text)' }}>
-                      {parseFloat(r.quantity).toFixed(1)} <span style={{ color: 'var(--text-dim)', fontSize: 9 }}>{r.unit}</span>
-                    </span>
+                  <td className="px-3 py-3 text-right">
+                    <span className="text-xs text-gray-700 tabular-nums">{parseFloat(r.quantity).toFixed(1)} <span className="text-muted-foreground">{r.unit}</span></span>
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0', textAlign: 'right' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 500, color: 'var(--text-hi)' }}>
-                      {parseFloat(r.co2e_tonnes).toFixed(3)}
-                    </span>
-                    {r.is_manually_edited && <span style={{ marginLeft: 4, fontSize: 9, color: 'var(--blue)' }}>✎</span>}
+                  <td className="px-3 py-3 text-right">
+                    <span className="text-xs font-medium text-gray-900 tabular-nums">{parseFloat(r.co2e_tonnes).toFixed(3)}</span>
+                    {r.is_manually_edited && <span className="ml-1 text-[10px] text-blue-500">✎</span>}
                   </td>
-                  <td style={{ padding: '11px 14px 11px 0' }}><Badge label={r.review_status} /></td>
-                  <td style={{ padding: '11px 14px 11px 0' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                  <td className="px-3 py-3"><Badge label={r.review_status} /></td>
+                  <td className="px-3 py-3">
+                    <div className="flex flex-wrap gap-1">
                       {(r.flags || []).filter(f => !f.is_resolved).map(f => (
-                        <span key={f.id} title={f.description}>
-                          <Badge label={f.flag_type.replace('_', ' ')} variant={f.severity} />
-                        </span>
+                        <span key={f.id} title={f.description}><Badge label={f.flag_type.replace('_', ' ')} variant={f.severity} /></span>
                       ))}
                     </div>
                   </td>
-                  <td style={{ padding: '11px 0' }} onClick={e => e.stopPropagation()}>
+                  <td className="px-3 py-3" onClick={e => e.stopPropagation()}>
                     {!r.is_locked && r.review_status !== 'approved' && (
-                      <div style={{ display: 'flex', gap: 2 }}>
+                      <div className="flex gap-1">
                         {[
-                          { action: 'approve', Icon: CheckCircle, color: 'var(--teal)' },
-                          { action: 'reject', Icon: XCircle, color: 'var(--coral)' },
-                          { action: 'flag', Icon: Flag, color: 'var(--amber)' },
-                        ].map(({ action, Icon, color }) => (
+                          { action: 'approve', Icon: CheckCircle, cls: 'text-emerald-600 hover:bg-emerald-50' },
+                          { action: 'reject', Icon: XCircle, cls: 'text-red-500 hover:bg-red-50' },
+                          { action: 'flag', Icon: Flag, cls: 'text-amber-500 hover:bg-amber-50' },
+                        ].map(({ action, Icon, cls }) => (
                           <button
                             key={action}
                             onClick={() => { setModal({ id: r.id, action }); setNote('') }}
                             title={action}
-                            style={{
-                              padding: '5px 6px', borderRadius: 5, border: 'none',
-                              background: 'transparent', color: 'var(--text-dim)',
-                              cursor: 'pointer', display: 'flex', alignItems: 'center',
-                              transition: 'color 0.15s, background 0.15s',
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.color = color; e.currentTarget.style.background = 'var(--bg-raised)' }}
-                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent' }}
+                            className={`p-1 rounded text-muted-foreground hover:text-current transition-colors ${cls}`}
                           >
                             <Icon size={14} strokeWidth={1.75} />
                           </button>
                         ))}
                       </div>
                     )}
-                    {r.is_locked && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-dim)' }}>locked</span>}
+                    {r.is_locked && <span className="text-xs text-muted-foreground">locked</span>}
                   </td>
                 </tr>
               ))}
@@ -281,97 +206,46 @@ export default function ReviewPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '12px 18px', borderTop: '1px solid var(--border)',
-          }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>
-              Page {filters.page} / {totalPages}
-            </span>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[
-                { disabled: filters.page === 1, onClick: () => setFilters(f => ({ ...f, page: f.page - 1 })), Icon: ChevronLeft },
-                { disabled: filters.page >= totalPages, onClick: () => setFilters(f => ({ ...f, page: f.page + 1 })), Icon: ChevronRight },
-              ].map(({ disabled, onClick, Icon }, i) => (
-                <button
-                  key={i}
-                  disabled={disabled}
-                  onClick={onClick}
-                  style={{
-                    padding: '5px 8px', borderRadius: 5,
-                    border: '1px solid var(--border)',
-                    background: 'transparent', cursor: disabled ? 'not-allowed' : 'pointer',
-                    color: disabled ? 'var(--text-dim)' : 'var(--text)',
-                    opacity: disabled ? 0.4 : 1,
-                    display: 'flex', alignItems: 'center',
-                  }}
-                >
-                  <Icon size={14} />
-                </button>
-              ))}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+            <span className="text-xs text-muted-foreground">Page {filters.page} / {totalPages}</span>
+            <div className="flex gap-1.5">
+              <Button variant="outline" size="icon" disabled={filters.page === 1} onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}>
+                <ChevronLeft size={14} />
+              </Button>
+              <Button variant="outline" size="icon" disabled={filters.page >= totalPages} onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}>
+                <ChevronRight size={14} />
+              </Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Action modal */}
-      {modal && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
-        }}>
-          <div style={{
-            background: 'var(--bg-card)', border: '1px solid var(--border-hi)',
-            borderRadius: 10, padding: '28px', width: 420,
-            boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
-            animation: 'fadeSlideIn 0.2s ease both',
-          }}>
-            <div style={{
-              fontFamily: 'var(--font-mono)', fontSize: 10, color: ACTION_COLOR[modal.action],
-              letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12,
-            }}>
-              — {modal.action} record
-            </div>
-            <h3 style={{ fontFamily: 'var(--font-head)', fontWeight: 700, fontSize: 20, color: 'var(--text-hi)', margin: '0 0 16px', textTransform: 'capitalize' }}>
-              {modal.action} this record?
-            </h3>
-            <textarea
-              value={note}
-              onChange={e => setNote(e.target.value)}
-              placeholder="Optional review note..."
-              style={{
-                width: '100%', padding: '10px 12px', boxSizing: 'border-box',
-                background: 'var(--bg-input)', border: '1px solid var(--border)',
-                borderRadius: 6, color: 'var(--text-hi)',
-                fontFamily: 'var(--font-body)', fontSize: 12,
-                resize: 'none', height: 80, outline: 'none',
-              }}
-            />
-            <div style={{ display: 'flex', gap: 10, marginTop: 16, justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => setModal(null)}
-                style={{
-                  padding: '8px 16px', borderRadius: 6, border: '1px solid var(--border)',
-                  background: 'transparent', color: 'var(--text)', cursor: 'pointer',
-                  fontFamily: 'var(--font-body)', fontSize: 12,
-                }}
-              >Cancel</button>
-              <button
-                onClick={() => actionMut.mutate({ id: modal.id, action: modal.action, notes: note })}
-                disabled={actionMut.isPending}
-                style={{
-                  padding: '8px 20px', borderRadius: 6, border: 'none',
-                  background: ACTION_COLOR[modal.action],
-                  color: modal.action === 'flag' ? '#000' : (modal.action === 'approve' ? '#000' : '#fff'),
-                  cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600,
-                  textTransform: 'capitalize',
-                }}
-              >Confirm {modal.action}</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Action dialog */}
+      <Dialog open={!!modal} onOpenChange={open => !open && setModal(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="capitalize">{modal?.action} this record?</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            value={note}
+            onChange={e => setNote(e.target.value)}
+            placeholder="Optional review note..."
+            className="min-h-[80px]"
+          />
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setModal(null)}>Cancel</Button>
+            <Button
+              size="sm"
+              variant={modal?.action === 'reject' ? 'destructive' : modal?.action === 'approve' ? 'default' : 'secondary'}
+              onClick={() => actionMut.mutate({ id: modal.id, action: modal.action, notes: note })}
+              disabled={actionMut.isPending}
+              className="capitalize"
+            >
+              Confirm {modal?.action}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

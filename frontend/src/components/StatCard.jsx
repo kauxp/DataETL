@@ -1,74 +1,28 @@
 const ACCENT = {
-  gray:   { color: 'var(--text)',   bg: 'transparent' },
-  teal:   { color: 'var(--teal)',   bg: 'var(--teal-dim)' },
-  green:  { color: 'var(--teal)',   bg: 'var(--teal-dim)' },
-  amber:  { color: 'var(--amber)',  bg: 'var(--amber-dim)' },
-  yellow: { color: 'var(--amber)',  bg: 'var(--amber-dim)' },
-  red:    { color: 'var(--coral)',  bg: 'var(--coral-dim)' },
-  blue:   { color: 'var(--blue)',   bg: 'var(--blue-dim)' },
-  purple: { color: 'var(--purple)', bg: 'var(--purple-dim)' },
+  gray:   { icon: 'text-gray-500 bg-gray-100', value: 'text-gray-900' },
+  teal:   { icon: 'text-emerald-600 bg-emerald-50', value: 'text-emerald-700' },
+  green:  { icon: 'text-emerald-600 bg-emerald-50', value: 'text-emerald-700' },
+  amber:  { icon: 'text-amber-600 bg-amber-50', value: 'text-amber-700' },
+  yellow: { icon: 'text-amber-600 bg-amber-50', value: 'text-amber-700' },
+  red:    { icon: 'text-red-600 bg-red-50', value: 'text-red-700' },
+  blue:   { icon: 'text-blue-600 bg-blue-50', value: 'text-blue-700' },
+  purple: { icon: 'text-purple-600 bg-purple-50', value: 'text-purple-700' },
 }
 
-export default function StatCard({ label, value, sub, color = 'gray', icon: Icon, accent }) {
-  const a = ACCENT[accent || color] || ACCENT.gray
+export default function StatCard({ label, value, sub, color = 'gray', icon: Icon }) {
+  const a = ACCENT[color] || ACCENT.gray
   return (
-    <div style={{
-      background: 'var(--bg-card)',
-      border: '1px solid var(--border)',
-      borderRadius: 8,
-      padding: '18px 20px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 8,
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Top line accent */}
-      <div style={{
-        position: 'absolute', top: 0, left: 20, right: 20, height: 1,
-        background: a.color, opacity: 0.35,
-      }} />
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <p style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: 11,
-          fontWeight: 500,
-          color: 'var(--text-dim)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          margin: 0,
-        }}>{label}</p>
+    <div className="rounded-lg border bg-white p-5 shadow-sm">
+      <div className="flex items-start justify-between">
+        <p className="text-sm font-medium text-muted-foreground">{label}</p>
         {Icon && (
-          <span style={{
-            background: a.bg,
-            color: a.color,
-            padding: '5px 6px',
-            borderRadius: 5,
-            display: 'flex',
-            alignItems: 'center',
-          }}>
-            <Icon size={14} strokeWidth={1.75} />
+          <span className={`rounded-md p-1.5 ${a.icon}`}>
+            <Icon size={15} strokeWidth={2} />
           </span>
         )}
       </div>
-
-      <p style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 26,
-        fontWeight: 500,
-        color: a.color === 'var(--text)' ? 'var(--text-hi)' : a.color,
-        margin: 0,
-        letterSpacing: '-0.02em',
-        lineHeight: 1,
-      }}>{value}</p>
-
-      {sub && <p style={{
-        fontFamily: 'var(--font-body)',
-        fontSize: 11,
-        color: 'var(--text-dim)',
-        margin: 0,
-      }}>{sub}</p>}
+      <p className={`mt-2 text-2xl font-semibold tracking-tight ${a.value}`}>{value}</p>
+      {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}
     </div>
   )
 }

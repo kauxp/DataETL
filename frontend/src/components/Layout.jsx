@@ -1,6 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { LayoutDashboard, ClipboardCheck, Upload, FolderOpen, LogOut } from 'lucide-react'
+import { LayoutDashboard, ClipboardCheck, Upload, FolderOpen, LogOut, Leaf } from 'lucide-react'
 
 const nav = [
   { to: '/',        label: 'Dashboard',    icon: LayoutDashboard, exact: true },
@@ -14,115 +14,54 @@ export default function Layout() {
   const navigate = useNavigate()
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg)' }}>
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside style={{
-        width: 220,
-        minWidth: 220,
-        background: 'var(--bg-card)',
-        borderRight: '1px solid var(--border)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}>
+      <aside className="w-56 min-w-56 flex flex-col bg-white border-r border-border">
         {/* Logo */}
-        <div style={{
-          padding: '24px 20px 22px',
-          borderBottom: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-        }}>
-          <div style={{ position: 'relative', width: 28, height: 28 }}>
-            <div style={{
-              position: 'absolute', inset: 0,
-              borderRadius: '50%',
-              background: 'var(--teal)',
-              opacity: 0.15,
-              animation: 'breathe 3.5s ease-in-out infinite',
-            }} />
-            <div style={{
-              position: 'absolute', inset: 4,
-              borderRadius: '50%',
-              background: 'var(--teal)',
-            }} />
+        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+          <div className="w-7 h-7 rounded-md bg-emerald-600 flex items-center justify-center">
+            <Leaf size={14} className="text-white" strokeWidth={2} />
           </div>
           <div>
-            <div style={{
-              fontFamily: 'var(--font-head)',
-              fontWeight: 700,
-              fontSize: 15,
-              color: 'var(--text-hi)',
-              letterSpacing: '0.01em',
-            }}>Breathe ESG</div>
-            <div style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 9,
-              color: 'var(--text-dim)',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              marginTop: 1,
-            }}>Carbon Intelligence</div>
+            <div className="text-sm font-semibold text-gray-900">Breathe ESG</div>
+            <div className="text-[10px] text-muted-foreground">Carbon Intelligence</div>
           </div>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <nav className="flex-1 p-3 space-y-0.5">
           {nav.map(({ to, label, icon: Icon, exact }) => (
             <NavLink
               key={to}
               to={to}
               end={exact}
-              style={({ isActive }) => ({
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '9px 12px',
-                borderRadius: 6,
-                textDecoration: 'none',
-                fontFamily: 'var(--font-body)',
-                fontSize: 13,
-                fontWeight: isActive ? 500 : 400,
-                color: isActive ? 'var(--teal)' : 'var(--text)',
-                background: isActive ? 'var(--teal-dim)' : 'transparent',
-                borderLeft: `2px solid ${isActive ? 'var(--teal)' : 'transparent'}`,
-                transition: 'all 0.15s ease',
-              })}
+              className={({ isActive }) =>
+                `flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
+                  isActive
+                    ? 'bg-emerald-50 text-emerald-700 font-medium'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                }`
+              }
             >
-              <Icon size={15} strokeWidth={1.75} />
-              {label}
+              {({ isActive }) => (
+                <>
+                  <Icon size={15} strokeWidth={isActive ? 2 : 1.75} />
+                  {label}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
         {/* User */}
-        <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border)' }}>
-          <div style={{ padding: '8px 12px', marginBottom: 4 }}>
-            <div style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500, color: 'var(--text-hi)' }}>
-              {user?.first_name || user?.username}
-            </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', textTransform: 'capitalize', marginTop: 2 }}>
-              {user?.role || 'analyst'}
-            </div>
+        <div className="p-3 border-t border-border">
+          <div className="px-3 py-1.5 mb-1">
+            <div className="text-sm font-medium text-gray-900">{user?.first_name || user?.username}</div>
+            <div className="text-xs text-muted-foreground capitalize">{user?.role || 'analyst'}</div>
           </div>
           <button
             onClick={() => { logout(); navigate('/login') }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              width: '100%',
-              padding: '8px 12px',
-              borderRadius: 6,
-              border: 'none',
-              background: 'transparent',
-              color: 'var(--text-dim)',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-body)',
-              fontSize: 13,
-              transition: 'color 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--bg-raised)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent' }}
+            className="flex w-full items-center gap-2.5 px-3 py-2 rounded-md text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
           >
             <LogOut size={14} strokeWidth={1.75} />
             Sign out
@@ -131,7 +70,7 @@ export default function Layout() {
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+      <main className="flex-1 overflow-y-auto overflow-x-hidden">
         <Outlet />
       </main>
     </div>
