@@ -43,7 +43,6 @@ class PlantMasterData(models.Model):
 
 
 class ActivityRecord(models.Model):
-    SCOPE_CHOICES = [(1, 'Scope 1'), (2, 'Scope 2'), (3, 'Scope 3')]
     CATEGORY_CHOICES = [
         ('fuel', 'Fuel Combustion'),
         ('electricity', 'Electricity'),
@@ -66,7 +65,7 @@ class ActivityRecord(models.Model):
     raw_record = models.OneToOneField(RawRecord, on_delete=models.SET_NULL, null=True, blank=True, related_name='activity_record')
 
     # Classification
-    scope = models.IntegerField(choices=SCOPE_CHOICES)
+    scope = models.IntegerField()
     category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
     subcategory = models.CharField(max_length=100)
 
