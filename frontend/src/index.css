@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:         #080b10;
+  --bg-card:    #0d1117;
+  --bg-raised:  #121820;
+  --bg-input:   #0a0e14;
+  --border:     #1e2735;
+  --border-hi:  #2a3748;
+  --text:       #8a95a8;
+  --text-hi:    #e2ddd6;
+  --text-dim:   #4a5568;
+  --teal:       #00d4a3;
+  --teal-dim:   rgba(0, 212, 163, 0.12);
+  --teal-glow:  rgba(0, 212, 163, 0.25);
+  --amber:      #f0a040;
+  --amber-dim:  rgba(240, 160, 64, 0.12);
+  --coral:      #f05555;
+  --coral-dim:  rgba(240, 85, 85, 0.12);
+  --blue:       #4d9eff;
+  --blue-dim:   rgba(77, 158, 255, 0.12);
+  --purple:     #a880ff;
+  --purple-dim: rgba(168, 128, 255, 0.12);
+
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 14px; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  text-align: left;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* Recharts dark theme overrides */
+.recharts-cartesian-axis-tick text { fill: var(--text-dim) !important; font-family: var(--font-mono) !important; font-size: 11px !important; }
+.recharts-legend-item-text { color: var(--text) !important; font-family: var(--font-body) !important; font-size: 12px !important; }
+.recharts-tooltip-wrapper { font-family: var(--font-mono) !important; }
+.recharts-default-tooltip { background: var(--bg-raised) !important; border: 1px solid var(--border-hi) !important; border-radius: 6px !important; color: var(--text-hi) !important; }
+.recharts-tooltip-label { color: var(--text) !important; }
+
+/* Breath pulse animation for logo */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+/* Scan line effect */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Fade slide in */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeSlideIn 0.35s ease both;
+}

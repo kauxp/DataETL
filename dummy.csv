@@ -1,0 +1,5 @@
+CustomerNumber,Name,AccountGroup,Street,City,Country,PostalCode,Currency,Industry
+CUST001,Apex Solutions,KUNNR,100 Tech Blvd,Austin,US,73301,USD,Technology
+CUST002,Global Logistics,KUNNR,456 Main St,Bengaluru,IN,560100,INR,Logistics
+CUST003,Mega Retail,KUNNR,88 Commerce Ave,Berlin,DE,10115,EUR,Retail
+CUST004,Nexus Corp,KUNNR,12 Horizon Way,Tokyo,JP,100-0001,JPY,Manufacturing
