@@ -120,7 +120,7 @@ export default function IngestPage() {
   const isBusy = upload.isPending || apiPull.isPending
 
   return (
-    <div className="p-6 max-w-2xl space-y-4">
+    <div className="p-4 md:p-6 max-w-2xl space-y-4">
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
@@ -140,7 +140,7 @@ export default function IngestPage() {
             <CardTitle className="text-sm">Create data source</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Source name</Label>
                 <Input

@@ -57,9 +57,9 @@ export default function ReviewPage() {
   const allSelected = records.length > 0 && records.every(r => selected.has(r.id))
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 md:p-6 space-y-4">
       {/* Header */}
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Review Queue</h1>
           <p className="text-sm text-muted-foreground mt-1">{total.toLocaleString()} records · page {filters.page} of {totalPages || 1}</p>
@@ -73,22 +73,22 @@ export default function ReviewPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap rounded-lg border bg-white px-4 py-3 shadow-sm">
-        <SlidersHorizontal size={14} className="text-muted-foreground" />
-        <Select value={filters.review_status} onChange={e => setFilters(f => ({ ...f, review_status: e.target.value, page: 1 }))} className="w-36">
+      <div className="flex items-center gap-2 flex-wrap rounded-lg border bg-white px-4 py-3 shadow-sm">
+        <SlidersHorizontal size={14} className="text-muted-foreground shrink-0" />
+        <Select value={filters.review_status} onChange={e => setFilters(f => ({ ...f, review_status: e.target.value, page: 1 }))} className="w-full sm:w-36">
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="flagged">Flagged</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
         </Select>
-        <Select value={filters.scope} onChange={e => setFilters(f => ({ ...f, scope: e.target.value, page: 1 }))} className="w-36">
+        <Select value={filters.scope} onChange={e => setFilters(f => ({ ...f, scope: e.target.value, page: 1 }))} className="w-full sm:w-44">
           <option value="">All source types</option>
           <option value="1">SAP / Fuel & Procurement</option>
           <option value="2">Utility / Electricity</option>
           <option value="3">Corporate Travel</option>
         </Select>
-        <Select value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value, page: 1 }))} className="w-40">
+        <Select value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value, page: 1 }))} className="w-full sm:w-40">
           <option value="">All categories</option>
           <option value="fuel">Fuel</option>
           <option value="electricity">Electricity</option>
@@ -111,7 +111,8 @@ export default function ReviewPage() {
         ) : records.length === 0 ? (
           <div className="p-10 text-center text-sm text-muted-foreground">No records match the current filters</div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[800px]">
             <thead>
               <tr className="border-b border-border bg-gray-50">
                 <th className="px-4 py-2.5 w-10">
@@ -203,6 +204,7 @@ export default function ReviewPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
 
         {/* Pagination */}

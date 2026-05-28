@@ -26,7 +26,8 @@ export default function BatchesPage() {
             <p className="text-sm text-muted-foreground mt-1">Upload a file on the Ingest page to get started</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="border-b border-border bg-gray-50">
                 {['Source', 'File / Pull', 'Uploaded by', 'Status', 'Rows', 'Parsed', 'Errors', 'Date'].map(h => (
@@ -52,6 +53,7 @@ export default function BatchesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

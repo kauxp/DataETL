@@ -67,7 +67,7 @@ export default function RecordDetailPage() {
   const sc = SCOPE_COLOR[record.scope] || 'text-gray-700'
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 md:p-6 space-y-4">
       {/* Back */}
       <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-gray-900 transition-colors">
         <ArrowLeft size={14} />
@@ -75,7 +75,7 @@ export default function RecordDetailPage() {
       </button>
 
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-xs font-medium uppercase tracking-wide ${sc}`}>{SCOPE_LABEL[record.scope] || `Scope ${record.scope}`}</span>
@@ -141,7 +141,7 @@ export default function RecordDetailPage() {
       )}
 
       {/* Content grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Panel title="Activity data">
           <DataRow label="Period" value={`${record.period_start} → ${record.period_end}`} mono />
           <DataRow label="Quantity" value={`${parseFloat(record.quantity).toFixed(4)} ${record.unit}`} mono />

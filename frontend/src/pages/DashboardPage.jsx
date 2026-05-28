@@ -71,9 +71,9 @@ export default function DashboardPage() {
   const total = d.total_co2e_tonnes || 0
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-end justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Emissions Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">{d.total_records || 0} activity records across all scopes</p>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Scope cards */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="SAP & Procurement" value={`${fmt(d.scope1_co2e || 0)} t`} sub="Fuel combustion data" color="amber" icon={Flame} />
         <StatCard label="Utility / Electricity" value={`${fmt(d.scope2_co2e || 0)} t`} sub="Electricity & utility data" color="purple" icon={Zap} />
         <StatCard label="Corporate Travel" value={`${fmt(d.scope3_co2e || 0)} t`} sub="Flights, hotels, ground transport" color="blue" icon={Plane} />
@@ -93,7 +93,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Review status */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Pending Review" value={d.pending_count || 0} color="amber" icon={Clock} />
         <StatCard label="Flagged" value={d.flagged_count || 0} color="red" icon={AlertTriangle} />
         <StatCard label="Approved" value={d.approved_count || 0} color="teal" icon={CheckCircle} />
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-[1fr_320px] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
         {/* Bar chart */}
         <div className="rounded-lg border bg-white p-5 shadow-sm">
           <div className="mb-4">
@@ -181,7 +181,8 @@ export default function DashboardPage() {
         <div className="px-5 py-3 border-b border-border">
           <h3 className="text-sm font-medium text-gray-900">Recent ingestion batches</h3>
         </div>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[600px]">
           <thead>
             <tr className="border-b border-border">
               {['Source', 'File / Pull', 'Status', 'Parsed', 'Errors', 'Date'].map(h => (
@@ -209,6 +210,7 @@ export default function DashboardPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )
